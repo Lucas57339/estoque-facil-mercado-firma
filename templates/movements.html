@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Movimentação de estoque{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Entrada e saída</p><h1>Registrar movimentação</h1><p>O sistema não permite saída acima do saldo disponível.</p></div><a class="btn btn-light" href="{{ url_for('inventory.dashboard') }}">Voltar ao painel</a></div>
+<section class="card"><h2>Dados da movimentação</h2>
+{% if products %}
+<form method="post" class="form-grid two-col">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="full"><label for="id_produto">Produto *</label><select id="id_produto" name="id_produto" required><option value="">Selecione um produto</option>{% for p in products %}<option value="{{ p['id_produto'] }}" {% if selected == p['id_produto']|string %}selected{% endif %}>{{ p['nome'] }} — {{ p['quantidade_atual'] }} un. disponíveis</option>{% endfor %}</select></div>
+  <div><label for="tipo">Tipo de operação *</label><select id="tipo" name="tipo" required><option value="entrada">Entrada</option><option value="saida">Saída</option></select></div>
+  <div><label for="quantidade">Quantidade *</label><input id="quantidade" name="quantidade" type="number" min="1" step="1" required></div>
+  <div class="full"><button class="btn" type="submit">Confirmar movimentação</button></div>
+</form>
+{% else %}<p>É necessário cadastrar um produto antes de movimentar o estoque.</p><a class="btn" href="{{ url_for('inventory.products') }}">Cadastrar produto</a>{% endif %}
+</section>
+<a class="link-next" href="{{ url_for('inventory.alerts') }}">Conferir alertas de estoque</a>
+{% endblock %}

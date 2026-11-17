@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Painel inicial{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Visão geral</p><h1>Painel inicial</h1><p>Controle de mercadorias e prioridades de conferência.</p></div><a class="btn" href="{{ url_for('inventory.products') }}">+ Cadastrar produto</a></div>
+<section class="stats" aria-label="Resumo do estoque">
+  <article class="stat"><span>Produtos cadastrados</span><strong>{{ counts.total }}</strong><small>Itens registrados</small></article>
+  <article class="stat"><span>Vencidos</span><strong>{{ counts.expired }}</strong><small>Requerem conferência</small></article>
+  <article class="stat"><span>Próximos do vencimento</span><strong>{{ counts.expiring }}</strong><small>Até 7 dias</small></article>
+  <article class="stat"><span>Estoque baixo</span><strong>{{ counts.low }}</strong><small>Igual ou abaixo do mínimo</small></article>
+</section>
+<section class="card"><h2>O que deseja fazer?</h2><div class="actions">
+  <a class="action" href="{{ url_for('inventory.products') }}"><span aria-hidden="true">＋</span><strong>Cadastrar produto</strong><small>Adicionar mercadorias ao estoque</small></a>
+  <a class="action" href="{{ url_for('inventory.movements') }}"><span aria-hidden="true">⇄</span><strong>Registrar movimentação</strong><small>Registrar entradas e saídas</small></a>
+  <a class="action" href="{{ url_for('inventory.alerts') }}"><span aria-hidden="true">⚠</span><strong>Ver alertas</strong><small>Validade e quantidade mínima</small></a>
+</div></section>
+<section class="card"><h2>Últimas movimentações</h2>
+{% if recent %}<div class="table-wrap"><table><thead><tr><th>Produto</th><th>Tipo</th><th>Quantidade</th><th>Data (UTC)</th></tr></thead><tbody>{% for m in recent %}<tr><td>{{ m['produto'] }}</td><td>{{ m['tipo']|capitalize }}</td><td>{{ m['quantidade'] }}</td><td>{{ m['data_movimentacao'] }}</td></tr>{% endfor %}</tbody></table></div>
+{% else %}<p>Não há movimentações registradas. Comece cadastrando um produto.</p>{% endif %}</section>
+{% endblock %}

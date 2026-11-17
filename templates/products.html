@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Cadastrar produto{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Cadastro</p><h1>Cadastrar produto</h1><p>Preencha os dados da mercadoria. Campos com * são obrigatórios.</p></div><a class="btn btn-light" href="{{ url_for('inventory.dashboard') }}">Voltar ao painel</a></div>
+<section class="card"><h2>Dados do produto</h2>
+<form method="post" class="form-grid two-col">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div><label for="nome">Nome do produto *</label><input id="nome" name="nome" maxlength="120" placeholder="Ex.: Iogurte Natural 170g" required></div>
+  <div><label for="codigo">Código *</label><input id="codigo" name="codigo" maxlength="40" placeholder="Ex.: 1001" required></div>
+  <div><label for="quantidade_atual">Quantidade inicial *</label><input id="quantidade_atual" name="quantidade_atual" type="number" min="0" step="1" required></div>
+  <div><label for="data_validade">Data de validade *</label><input id="data_validade" name="data_validade" type="date" required></div>
+  <div><label for="estoque_minimo">Estoque mínimo *</label><input id="estoque_minimo" name="estoque_minimo" type="number" min="0" step="1" required></div>
+  <div class="align-end"><button type="submit" class="btn">Salvar produto</button></div>
+</form>
+</section>
+<section class="card"><h2>Produtos cadastrados</h2>
+{% if products %}<div class="table-wrap"><table><thead><tr><th>Código</th><th>Produto</th><th>Saldo</th><th>Validade</th><th>Estoque mínimo</th><th>Ação</th></tr></thead><tbody>
+{% for p in products %}<tr><td>{{ p['codigo'] }}</td><td>{{ p['nome'] }}</td><td>{{ p['quantidade_atual'] }}</td><td>{{ p['data_validade'][8:10] }}/{{ p['data_validade'][5:7] }}/{{ p['data_validade'][:4] }}</td><td>{{ p['estoque_minimo'] }}</td><td><a href="{{ url_for('inventory.movements', produto=p['id_produto']) }}">Movimentar</a></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<p>Nenhum produto cadastrado até o momento.</p>{% endif %}
+</section>
+{% endblock %}

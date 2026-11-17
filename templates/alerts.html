@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Alertas do estoque{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Monitoramento</p><h1>Alertas do estoque</h1><p>Produtos vencidos, com vencimento em até 7 dias ou com estoque baixo.</p></div><a class="btn btn-light" href="{{ url_for('inventory.dashboard') }}">Voltar ao painel</a></div>
+<nav class="filters" aria-label="Filtrar alertas">
+  <a href="{{ url_for('inventory.alerts', tipo='todos') }}" {% if selected_filter=='todos' %}aria-current="page"{% endif %}>Todos</a>
+  <a href="{{ url_for('inventory.alerts', tipo='vencidos') }}" {% if selected_filter=='vencidos' %}aria-current="page"{% endif %}>Vencidos</a>
+  <a href="{{ url_for('inventory.alerts', tipo='proximos') }}" {% if selected_filter=='proximos' %}aria-current="page"{% endif %}>Vencimento próximo</a>
+  <a href="{{ url_for('inventory.alerts', tipo='baixos') }}" {% if selected_filter=='baixos' %}aria-current="page"{% endif %}>Estoque baixo</a>
+</nav>
+<section class="card"><h2>Produtos que exigem atenção</h2>
+{% if products %}
+<div class="alert-list">{% for p, s in products %}<article class="alert-card"><div><h3>{{ p['nome'] }} <small>({{ p['codigo'] }})</small></h3><p>Saldo: {{ p['quantidade_atual'] }} un. · Mínimo: {{ p['estoque_minimo'] }} un. · Validade: {{ p['data_validade'][8:10] }}/{{ p['data_validade'][5:7] }}/{{ p['data_validade'][:4] }}</p>
+  <div class="tags">{% if s.expired %}<span class="tag danger">✖ Produto vencido há {{ -s.days }} dia(s)</span>{% endif %}{% if s.expiring %}<span class="tag warn">⚠ Vence em {{ s.days }} dia(s)</span>{% endif %}{% if s.low %}<span class="tag low">↓ Estoque baixo</span>{% endif %}</div></div><a class="btn btn-light" href="{{ url_for('inventory.movements', produto=p['id_produto']) }}">Registrar movimentação</a></article>{% endfor %}</div>
+{% else %}<p>Nenhum alerta encontrado para este filtro.</p>{% endif %}
+</section>
+{% endblock %}
