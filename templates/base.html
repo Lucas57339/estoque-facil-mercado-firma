@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Estoque Fácil{% endblock %} | Mercado Firma</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo principal</a>
+  <header class="topbar">
+    <div class="brand"><span class="brand-icon" aria-hidden="true">▦</span><div><strong>Estoque Fácil</strong><small>Mercado Firma · MVP acadêmico</small></div></div>
+    {% if current_user %}
+      <div class="userbar"><span>Olá, {{ current_user['nome'] }}</span>
+        <form method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-light">Sair</button></form>
+      </div>
+    {% endif %}
+  </header>
+  {% if current_user %}
+  <nav class="mainnav" aria-label="Navegação principal">
+    <a href="{{ url_for('inventory.dashboard') }}" {% if request.endpoint == 'inventory.dashboard' %}aria-current="page"{% endif %}>Painel inicial</a>
+    <a href="{{ url_for('inventory.products') }}" {% if request.endpoint == 'inventory.products' %}aria-current="page"{% endif %}>Cadastrar produto</a>
+    <a href="{{ url_for('inventory.movements') }}" {% if request.endpoint == 'inventory.movements' %}aria-current="page"{% endif %}>Registrar movimentação</a>
+    <a href="{{ url_for('inventory.alerts') }}" {% if request.endpoint == 'inventory.alerts' %}aria-current="page"{% endif %}>Ver alertas</a>
+  </nav>
+  {% endif %}
+  <main id="conteudo" class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="messages" role="status" aria-live="polite">
+        {% for category, message in messages %}<p class="message {{ category }}">{{ '✓' if category == 'success' else '!' }} {{ message }}</p>{% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>Estoque Fácil — demonstração educacional • ODS 12: Consumo e Produção Responsáveis</footer>
+</body>
+</html>

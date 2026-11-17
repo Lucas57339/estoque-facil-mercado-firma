@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+<section class="card login-card">
+  <p class="eyebrow">Acesso do funcionário</p>
+  <h1>Entrar no Estoque Fácil</h1>
+  <p>Informe o usuário cadastrado para consultar o estoque do Mercado Firma.</p>
+  <form method="post" class="form-grid">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="login">Usuário</label>
+    <input id="login" name="login" required autocomplete="username" maxlength="80">
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" name="senha" required autocomplete="current-password">
+    <button type="submit" class="btn">Entrar</button>
+  </form>
+</section>
+{% endblock %}
